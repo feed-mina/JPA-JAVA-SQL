@@ -59,3 +59,29 @@ SELECT concat(first_name, '',last_name) AS 이름,
 FROM employees
 WHERE hire_date like '1989%';
 
+
+# 실행계획 살펴보기
+EXPLAIN SELECT concat(first_name, '',last_name) AS 이름,
+		hire_date AS 입사일
+	FROM employees
+WHERE substring(hire_date,1,4)='1989';
+
+EXPLAIN SELECT concat(first_name, '',last_name) AS 이름,
+	hire_date AS 입사일
+FROM employees
+WHERE hire_date like '1989%';
+
+CREATE INDEX employees_hire_date_idx ON employees (hire_date);
+EXPLAIN SELECT concat(first_name, ' ', last_name) AS 이름,
+	hire_date AS 입사일
+FROM employees
+WHERE substring(hire_date, 1, 4) = '1989';
+
+EXPLAIN SELECT concat(first_name, ' ', last_name) AS 이름,
+	hire_date AS 입사일
+FROM employees
+WHERE hire_date like '1989%';
+
+# 데이터가 너무 적을때는 인덱스를 만들때 오히려 속도가 느릴 수 있다. 인덱스를 만들때는 데이터가 많을때 생긴다. 첫번째 케이스에 possible_keys 에는 null 이나 
+# 두번째 케이스에 possible_keys 가 employees_hire_date_idx로 인덱스를 타는 것을 확인할 수 있다.
+
