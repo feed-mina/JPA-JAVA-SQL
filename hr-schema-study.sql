@@ -85,3 +85,26 @@ WHERE hire_date like '1989%';
 # 데이터가 너무 적을때는 인덱스를 만들때 오히려 속도가 느릴 수 있다. 인덱스를 만들때는 데이터가 많을때 생긴다. 첫번째 케이스에 possible_keys 에는 null 이나 
 # 두번째 케이스에 possible_keys 가 employees_hire_date_idx로 인덱스를 타는 것을 확인할 수 있다.
 
+SHOW INDEX FROM employees;
+# 인덱스를 만들때 테이블명_칼럼영_idx 방식으로 만드는 편이다.
+ALTER TABLE employees DROP INDEX employees_hire_date_idx;
+
+SELECT LPAD('hi', 5, '?'), LPAD('joe',7,'*');
+
+# 사원테이블에서 급여를 출력하되 급여는 10자리로 부족한 자리수는 *로 표시한다.
+# cast 연산자 는 salary를 문자로 변환하게 해준다. 되도록 auto cast 보다 직접 타입을 바꾸는게 좋다
+SELECT employee_id, LPAD(cast(salary as char), 10, '*')
+	FROM employees;
+    
+# 문자형 함수 - TRIM LTRIM, RTRIM
+SELECT LTRIM('        hello    '), RTRIM('      hello     ');
+SELECT TRIM( '  hi  '), TRIM(BOTH 'X' FROM 'XXXhiXXX');
+
+# 숫자형 함수 - MOD(n,m)% : n을 m으로 나눈 나머지 값
+SELECT MOD(234,10), 253 % 7, MOD(29,9);
+
+# CEILING(X) : X 보다 작지 않은 가장 작은 정수
+SELECT CEILING(1.23), CEILING(-1.23);
+
+# ROUND(X) : X에 가장 근접한 정수
+SELECT ROUND(-1.53) , ROUND(-1.58), ROUND(1.9);
