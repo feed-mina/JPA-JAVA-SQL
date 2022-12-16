@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 // @Component 붙어 있는 객체는 스프링 컨테이너가 관리하는 객체가 된다.
@@ -25,13 +26,22 @@ public class DemoApplication implements CommandLineRunner {
 	// Spring이 Object로 참조 할 수 있는 모든 Bean을 List 형태로 주입한다.
 	// Object는 모든 객체의 최상위 객체이기 때문에 모든 Bean을 출력한다.
 	@Autowired
-	List<Object> beans;
+	DataSource dataSource;
+	// JavaX.sql 구현체를 구현하는 인터페이스가 필요하다. 히카리데이터 소스를 실제로 넣어서 생성한다.
 
 	@Override
 	public  void run(String... args) throws Exception{
-		for(Object obj: beans){
-			System.out.println(obj.getClass().getName());
-		}
+			List<Connection> list = new ArrayList<>();
 
+			int i = 0;
+			while(true){
+				Connection conn = dataSource.getConnection();
+				list.add(conn);
+				System.out.println("Connection" + i + ":"+conn);
+				i++;
+				// 예를 들어 예메시스템에서 한꺼번에 몰려서 커넥션을 모두 주는 경우, lock이 걸려서 죽는다.
+				Thread.sleep(100);
+			}
+ 		//	System.out.println(dataSource.getClass().getName());
 	}
 }
