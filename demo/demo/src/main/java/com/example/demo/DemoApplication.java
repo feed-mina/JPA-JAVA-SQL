@@ -36,10 +36,10 @@ public class DemoApplication implements CommandLineRunner {
 			int i = 0;
 			while(true){
 				Connection conn = dataSource.getConnection();
-				list.add(conn);
-				System.out.println("Connection" + i + ":"+conn);
-				i++;
-				// 예를 들어 예메시스템에서 한꺼번에 몰려서 커넥션을 모두 주는 경우, lock이 걸려서 죽는다.
+				// conn을 이용하여 SQL을 실행 , slow sql을 실행하게 되면..
+				// close를 해서 반드시 돌려준다. SQL을 할때 데이터커넥션을 빨리 쓰고 빨리 돌려준다. SQL을 slow하지 않게 잘 작성해야 한다.
+				// 그렇기 때문에 느린 SQL은 빠른 SQL로 튜닝할 필요성이 있다.
+				conn.close();
 				Thread.sleep(100);
 			}
  		//	System.out.println(dataSource.getClass().getName());
