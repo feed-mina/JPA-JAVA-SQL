@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.domain.Role;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +23,26 @@ public class RoleDao {
         System.out.println("RoleDao 생성자 호출");
         System.out.println(dataSource.getClass().getName());
         jdbcTemplate = new JdbcTemplate();
+    }
+    // Role 테이블에 한건 저장, 저장을 성공하면 true, 실패하면 false를 반환한다.
+    public boolean addRole(Role role){
+        String sql = "INSERT INTO role(role_id, name) VALUES(?, ?)"; //물음표 두개를 바인딩한다.
+        int result = jdbcTemplate.update(sql, role.getRoleId(), role.getName()); // update 메소드는 insert, update, delete SQL문을 실행할때 사용한다.
+        return result == 1; // result 는 성공한 건수를 의미한다.
+    }
+
+    public boolean deleteRole(int roleId){
+        String sql = "DELETE FROM role WHERE role_id = ?";
+        int result = jdbcTemplate.update(sql, roleId);
+        return result == 1;
+    }
+    public Role getRole(int roleId){
+        String sql = "SELECT role_id, name FROM role WHERE role_id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            Role role = new Role();
+            role.setRoleId(rs.getInt("role_id"));
+            role.setName(rs.getString("name"));
+            return role;
+        },roleId);
     }
 }
